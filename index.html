@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Трекер проекта</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #181c27;
+    --bg3: #1e2333;
+    --border: #2a2f42;
+    --text: #e2e6f0;
+    --text2: #8892aa;
+    --blue: #3b82f6;
+    --blue-dim: #1e3a5f;
+    --blue-text: #93c5fd;
+    --green: #22c55e;
+    --green-dim: #14532d;
+    --green-text: #86efac;
+    --accent: #6366f1;
+    --danger: #ef4444;
+    --radius: 8px;
+    --radius-sm: 5px;
+    --font: 'Inter', system-ui, -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; min-height: 100vh; }
+  a { color: var(--blue-text); }
+
+  .app { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .app-header { margin-bottom: 2rem; }
+  .app-header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+  .app-header p { color: var(--text2); font-size: 13px; margin-top: 4px; }
+
+  /* Toolbar */
+  .toolbar { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .toolbar input { flex: 1; min-width: 180px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text); font-size: 13px; font-family: var(--font); outline: none; }
+  .toolbar input:focus { border-color: var(--accent); }
+  button { cursor: pointer; font-family: var(--font); font-size: 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg2); color: var(--text); padding: 7px 14px; transition: background .15s, border-color .15s; }
+  button:hover { background: var(--bg3); border-color: var(--accent); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #4f46e5; border-color: #4f46e5; }
+  .btn-danger:hover { background: #450a0a; border-color: var(--danger); color: var(--danger); }
+
+  /* Table */
+  .tbl-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { font-size: 11px; font-weight: 500; color: var(--text2); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+  tbody tr:hover { background: var(--bg2); }
+  td { padding: 8px 10px; vertical-align: middle; }
+  td input[type=text] { background: transparent; border: none; outline: none; font-size: 13px; font-weight: 500; color: var(--text); font-family: var(--font); width: 100%; }
+  td input[type=number] { width: 64px; text-align: center; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 13px; font-family: var(--font); padding: 4px 6px; outline: none; }
+  td input[type=number]:focus { border-color: var(--accent); }
+  .days-cell { color: var(--text2); font-size: 13px; text-align: center; }
+
+  /* Ball toggle */
+  .ball-toggle { display: flex; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); width: fit-content; }
+  .ball-btn { padding: 4px 12px; font-size: 12px; border: none; background: transparent; cursor: pointer; color: var(--text2); font-family: var(--font); transition: background .15s; border-radius: 0; }
+  .ball-btn.me.active { background: var(--blue-dim); color: var(--blue-text); }
+  .ball-btn.client.active { background: var(--green-dim); color: var(--green-text); }
+
+  /* Metrics */
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2rem; }
+  .metric { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .metric-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .metric-val { font-size: 28px; font-weight: 600; letter-spacing: -1px; }
+
+  /* Calendar */
+  .section-title { font-size: 13px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 0.75rem; }
+  .cal-nav-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .cal-month { font-size: 15px; font-weight: 600; min-width: 160px; }
+  .cal-legend { display: flex; gap: 12px; margin-left: auto; font-size: 12px; color: var(--text2); align-items: center; }
+  .ldot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .day-label { font-size: 11px; color: var(--text2); text-align: center; padding: 4px 0; font-weight: 500; }
+  .day-cell { min-height: 60px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 6px; cursor: pointer; transition: border-color .15s; }
+  .day-cell:hover { border-color: var(--accent); }
+  .day-cell.other { opacity: 0.3; cursor: default; }
+  .day-cell.today { border-color: var(--accent); }
+  .day-num { font-size: 11px; color: var(--text2); margin-bottom: 3px; }
+  .day-entries { display: flex; flex-direction: column; gap: 2px; }
+  .edot { font-size: 10px; padding: 1px 5px; border-radius: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .edot.me { background: var(--blue-dim); color: var(--blue-text); }
+  .edot.client { background: var(--green-dim); color: var(--green-text); }
+
+  /* Export */
+  .export-section { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+  .export-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .export-row span { font-size: 13px; font-weight: 500; margin-right: 4px; }
+  .md-block { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; font-family: var(--mono); font-size: 12px; line-height: 1.75; white-space: pre; overflow-x: auto; max-height: 320px; overflow-y: auto; color: #a5b4fc; display: none; }
+  .copy-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+  .copy-ok { font-size: 12px; color: var(--green-text); opacity: 0; transition: opacity .3s; }
+  .copy-ok.show { opacity: 1; }
+
+  /* Save/Load */
+  .persist-row { display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap; align-items: center; }
+  .persist-row span { font-size: 12px; color: var(--text2); }
+
+  /* Modal */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; align-items: center; justify-content: center; }
+  .overlay.open { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; width: 320px; max-width: 95vw; }
+  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; }
+  .modal-entries { margin-bottom: 10px; }
+  .mentry { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .mentry .edot { flex: 1; padding: 4px 10px; font-size: 12px; }
+  .mentry .who-label { font-size: 12px; color: var(--text2); min-width: 44px; }
+  .mentry button { padding: 3px 8px; }
+  .add-entry-row { display: flex; gap: 6px; align-items: center; }
+  .add-entry-row select { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: var(--font); font-size: 13px; padding: 6px 8px; outline: none; }
+  .modal-footer { margin-top: 1rem; display: flex; justify-content: flex-end; }
+
+  @media (max-width: 600px) {
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .metric:last-child { grid-column: 1 / -1; }
+    .cal-legend { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="app-header">
+    <h1>Трекер задач проекта</h1>
+    <p>Задачи · Тайминги · Ответственность</p>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="new-task" placeholder="Название новой задачи…" onkeydown="if(event.key==='Enter')addTask()" />
+    <button class="btn-primary" onclick="addTask()">+ Добавить</button>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Задача</th>
+          <th style="width:90px;text-align:center">Часы</th>
+          <th style="width:70px;text-align:center">Дни</th>
+          <th style="width:140px">Мяч у</th>
+          <th style="width:40px"></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Всего задач</div><div class="metric-val" id="m-tasks">0</div></div>
+    <div class="metric"><div class="metric-label">Часов</div><div class="metric-val" id="m-hours">0</div></div>
+    <div class="metric"><div class="metric-label">Мяч у меня</div><div class="metric-val" id="m-me">0</div></div>
+  </div>
+
+  <div class="section-title">Календарь ответственности</div>
+  <div class="cal-nav-row">
+    <button onclick="changeMonth(-1)">&#8249;</button>
+    <span class="cal-month" id="cal-month"></span>
+    <button onclick="changeMonth(1)">&#8250;</button>
+    <div class="cal-legend">
+      <span><span class="ldot" style="background:var(--blue)"></span>Я</span>
+      <span><span class="ldot" style="background:var(--green)"></span>Клиент</span>
+    </div>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+
+  <div class="export-section">
+    <div class="export-row">
+      <span>📄 Экспорт в Markdown</span>
+      <button onclick="genMd('tasks')">Задачи</button>
+      <button onclick="genMd('cal')">Календарь</button>
+      <button onclick="genMd('full')">Всё</button>
+    </div>
+    <div class="md-block" id="md-out"></div>
+    <div class="copy-row" id="copy-row" style="display:none">
+      <button onclick="copyMd()">⧉ Скопировать</button>
+      <span class="copy-ok" id="copy-ok">Скопировано!</span>
+    </div>
+  </div>
+
+  <div class="persist-row">
+    <span>💾 Данные:</span>
+    <button onclick="saveData()">Сохранить в файл</button>
+    <label style="cursor:pointer"><button onclick="document.getElementById('load-file').click()">Загрузить из файла</button></label>
+    <input type="file" id="load-file" accept=".json" style="display:none" onchange="loadData(event)" />
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <h3 id="modal-title">Записи</h3>
+    <div class="modal-entries" id="modal-entries"></div>
+    <div class="add-entry-row">
+      <select id="e-task"></select>
+      <select id="e-who" style="width:90px">
+        <option value="me">Я</option>
+        <option value="client">Клиент</option>
+      </select>
+      <button onclick="addEntry()">+</button>
+    </div>
+    <div class="modal-footer"><button onclick="closeModal(null)">Закрыть</button></div>
+  </div>
+</div>
+
+<script>
+const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const DAYS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+let tasks = [
+  { id: 1, name: 'Дизайн макета', hours: 8, ball: 'me' },
+  { id: 2, name: 'Согласование', hours: 2, ball: 'client' },
+  { id: 3, name: 'Разработка', hours: 20, ball: 'me' },
+];
+let nextId = 4;
+let entries = {};
+let curY, curM, selDate;
+
+function init() {
+  const n = new Date(); curY = n.getFullYear(); curM = n.getMonth();
+  render(); renderCal();
+}
+
+function addTask() {
+  const inp = document.getElementById('new-task');
+  const name = inp.value.trim(); if (!name) return;
+  tasks.push({ id: nextId++, name, hours: 0, ball: 'me' });
+  inp.value = ''; render(); renderCal();
+}
+
+function removeTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  for (const k in entries) { entries[k] = entries[k].filter(e => e.tid !== id); if (!entries[k].length) delete entries[k]; }
+  render(); renderCal();
+}
+
+function setBall(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.ball=v; render();} }
+function setHours(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.hours=parseFloat(v)||0; renderMetrics();} }
+function setName(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.name=v; renderCal();} }
+
+function render() {
+  document.getElementById('tbody').innerHTML = tasks.map(t => {
+    const days = Math.round(t.hours/8*10)/10;
+    return `<tr>
+      <td><input type="text" value="${esc(t.name)}" onblur="setName(${t.id},this.value)" /></td>
+      <td style="text-align:center"><input type="number" min="0" step="0.5" value="${t.hours}" onchange="setHours(${t.id},this.value)" /></td>
+      <td class="days-cell">${days}</td>
+      <td><div class="ball-toggle">
+        <button class="ball-btn me ${t.ball==='me'?'active':''}" onclick="setBall(${t.id},'me')">Я</button>
+        <button class="ball-btn client ${t.ball==='client'?'active':''}" onclick="setBall(${t.id},'client')">Клиент</button>
+      </div></td>
+      <td><button class="btn-danger" onclick="removeTask(${t.id})" title="Удалить">✕</button></td>
+    </tr>`;
+  }).join('');
+  renderMetrics();
+}
+
+function renderMetrics() {
+  document.getElementById('m-tasks').textContent = tasks.length;
+  const h = tasks.reduce((s,t)=>s+t.hours,0);
+  document.getElementById('m-hours').textContent = h%1===0?h:h.toFixed(1);
+  document.getElementById('m-me').textContent = tasks.filter(t=>t.ball==='me').length;
+}
+
+function changeMonth(d) {
+  curM+=d; if(curM>11){curM=0;curY++;} if(curM<0){curM=11;curY--;}
+  renderCal();
+}
+
+function renderCal() {
+  document.getElementById('cal-month').textContent = MONTHS[curM]+' '+curY;
+  const today = new Date();
+  const first = new Date(curY,curM,1);
+  let dow = first.getDay(); if(dow===0) dow=7;
+  const dim = new Date(curY,curM+1,0).getDate();
+  const dimp = new Date(curY,curM,0).getDate();
+
+  let html = DAYS.map(d=>`<div class="day-label">${d}</div>`).join('');
+  let cells=[];
+  for(let i=dow-1;i>0;i--) cells.push({d:dimp-i+1,cur:false});
+  for(let i=1;i<=dim;i++) cells.push({d:i,cur:true});
+  while(cells.length%7!==0) cells.push({d:cells.length-dim-dow+2,cur:false});
+
+  html += cells.map(c=>{
+    const key=`${curY}-${pad(curM+1)}-${pad(c.d)}`;
+    const isToday=c.cur&&today.getFullYear()===curY&&today.getMonth()===curM&&today.getDate()===c.d;
+    const ents=(entries[key]||[]);
+    const dots=ents.slice(0,3).map(e=>{
+      const t=tasks.find(t=>t.id===e.tid);
+      return `<div class="edot ${e.who}">${t?t.name:'?'}</div>`;
+    }).join('');
+    return `<div class="day-cell${c.cur?'':' other'}${isToday?' today':''}" ${c.cur?`onclick="openModal('${key}')"`:''}>
+      <div class="day-num">${c.d}</div><div class="day-entries">${dots}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function openModal(key) {
+  selDate=key;
+  const [y,m,d]=key.split('-');
+  document.getElementById('modal-title').textContent=`${parseInt(d)} ${MONTHS_GEN[parseInt(m)-1]} ${y}`;
+  renderModalEntries();
+  document.getElementById('e-task').innerHTML=tasks.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function renderModalEntries() {
+  const ents=entries[selDate]||[];
+  const el=document.getElementById('modal-entries');
+  if(!ents.length){el.innerHTML=`<div style="font-size:12px;color:var(--text2);margin-bottom:10px">Нет записей</div>`;return;}
+  el.innerHTML=ents.map((e,i)=>{
+    const t=tasks.find(t=>t.id===e.tid);
+    return `<div class="mentry">
+      <span class="edot ${e.who}">${t?t.name:'?'}</span>
+      <span class="who-label">${e.who==='me'?'Я':'Клиент'}</span>
+      <button class="btn-danger" onclick="removeEntry(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function addEntry() {
+  const tid=parseInt(document.getElementById('e-task').value);
+  const who=document.getElementById('e-who').value;
+  if(!tid) return;
+  if(!entries[selDate]) entries[selDate]=[];
+  entries[selDate].push({tid,who});
+  renderModalEntries(); renderCal();
+}
+
+function removeEntry(i) {
+  entries[selDate].splice(i,1);
+  if(!entries[selDate].length) delete entries[selDate];
+  renderModalEntries(); renderCal();
+}
+
+function closeModal(e) {
+  if(e&&e.target!==document.getElementById('overlay')) return;
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function pad(n){return String(n).padStart(2,'0');}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+
+// Markdown export
+function buildTasksMd(){
+  const totalH=tasks.reduce((s,t)=>s+t.hours,0);
+  const totalD=Math.round(totalH/8*10)/10;
+  let md='## Задачи проекта\n\n';
+  md+='| Задача | Часы | Дни | Мяч у |\n';
+  md+='|--------|-----:|----:|-------|\n';
+  tasks.forEach(t=>{
+    md+=`| ${t.name} | ${t.hours} | ${Math.round(t.hours/8*10)/10} | ${t.ball==='me'?'🔵 Я':'🟢 Клиент'} |\n`;
+  });
+  md+=`| **Итого** | **${totalH}** | **${totalD}** | |\n`;
+  return md;
+}
+
+function buildCalMd(){
+  const keys=Object.keys(entries).sort();
+  if(!keys.length) return '## Календарь ответственности\n\n_Нет записей._\n';
+  const byMonth={};
+  keys.forEach(k=>{ const [y,m]=k.split('-'); const mk=`${y}-${m}`; if(!byMonth[mk]) byMonth[mk]=[]; byMonth[mk].push(k); });
+  let md='## Календарь ответственности\n\n';
+  Object.keys(byMonth).sort().forEach(mk=>{
+    const [y,m]=mk.split('-');
+    md+=`### ${MONTHS[parseInt(m)-1]} ${y}\n\n`;
+    md+='| Дата | Задача | Мяч у |\n|------|--------|-------|\n';
+    byMonth[mk].forEach(dateKey=>{
+      (entries[dateKey]||[]).forEach(e=>{
+        const [,,d]=dateKey.split('-');
+        const t=tasks.find(t=>t.id===e.tid);
+        md+=`| ${parseInt(d)} ${MONTHS_GEN[parseInt(m)-1]} | ${t?t.name:'?'} | ${e.who==='me'?'🔵 Я':'🟢 Клиент'} |\n`;
+      });
+    });
+    md+='\n';
+  });
+  return md;
+}
+
+function genMd(type){
+  const now=new Date();
+  let md=`> Сгенерировано: ${now.getDate()} ${MONTHS_GEN[now.getMonth()]} ${now.getFullYear()}\n\n`;
+  if(type==='tasks') md+=buildTasksMd();
+  else if(type==='cal') md+=buildCalMd();
+  else md+=buildTasksMd()+'\n---\n\n'+buildCalMd();
+  const el=document.getElementById('md-out');
+  el.textContent=md; el.style.display='block';
+  document.getElementById('copy-row').style.display='flex';
+}
+
+function copyMd(){
+  navigator.clipboard.writeText(document.getElementById('md-out').textContent).then(()=>{
+    const fb=document.getElementById('copy-ok');
+    fb.classList.add('show'); setTimeout(()=>fb.classList.remove('show'),2000);
+  });
+}
+
+// Save / Load JSON
+function saveData(){
+  const data={tasks,nextId,entries};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='project-tracker.json'; a.click();
+}
+
+function loadData(ev){
+  const file=ev.target.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      tasks=d.tasks||[]; nextId=d.nextId||100; entries=d.entries||{};
+      render(); renderCal();
+    }catch{ alert('Ошибка чтения файла'); }
+  };
+  r.readAsText(file);
+  ev.target.value='';
+}
+
+init();
+</script>
+</body>
+</html>
