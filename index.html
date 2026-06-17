@@ -27,24 +27,25 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; min-height: 100vh; }
-  a { color: var(--blue-text); }
 
   .app { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
   .app-header { margin-bottom: 2rem; }
   .app-header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
   .app-header p { color: var(--text2); font-size: 13px; margin-top: 4px; }
 
-  /* Toolbar */
-  .toolbar { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .toolbar input { flex: 1; min-width: 180px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text); font-size: 13px; font-family: var(--font); outline: none; }
-  .toolbar input:focus { border-color: var(--accent); }
-  button { cursor: pointer; font-family: var(--font); font-size: 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg2); color: var(--text); padding: 7px 14px; transition: background .15s, border-color .15s; }
+  .toolbar { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
+  .toolbar input[type=text] { flex: 1; min-width: 160px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text); font-size: 13px; font-family: var(--font); outline: none; }
+  .toolbar input[type=text]:focus { border-color: var(--accent); }
+  .color-pick-wrap { display: flex; align-items: center; gap: 6px; }
+  .color-pick-wrap label { font-size: 12px; color: var(--text2); white-space: nowrap; }
+  input[type=color] { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg2); cursor: pointer; padding: 2px; }
+
+  button { cursor: pointer; font-family: var(--font); font-size: 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg2); color: var(--text); padding: 7px 14px; transition: background .15s, border-color .15s; white-space: nowrap; }
   button:hover { background: var(--bg3); border-color: var(--accent); }
   .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn-primary:hover { background: #4f46e5; border-color: #4f46e5; }
   .btn-danger:hover { background: #450a0a; border-color: var(--danger); color: var(--danger); }
 
-  /* Table */
   .tbl-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
   table { width: 100%; border-collapse: collapse; }
   thead th { font-size: 11px; font-weight: 500; color: var(--text2); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
@@ -55,38 +56,56 @@
   td input[type=number] { width: 64px; text-align: center; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 13px; font-family: var(--font); padding: 4px 6px; outline: none; }
   td input[type=number]:focus { border-color: var(--accent); }
   .days-cell { color: var(--text2); font-size: 13px; text-align: center; }
+  .task-color-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; flex-shrink: 0; cursor: pointer; border: 2px solid rgba(255,255,255,0.15); }
 
-  /* Ball toggle */
   .ball-toggle { display: flex; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); width: fit-content; }
   .ball-btn { padding: 4px 12px; font-size: 12px; border: none; background: transparent; cursor: pointer; color: var(--text2); font-family: var(--font); transition: background .15s; border-radius: 0; }
   .ball-btn.me.active { background: var(--blue-dim); color: var(--blue-text); }
   .ball-btn.client.active { background: var(--green-dim); color: var(--green-text); }
 
-  /* Metrics */
   .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2rem; }
   .metric { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
   .metric-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
   .metric-val { font-size: 28px; font-weight: 600; letter-spacing: -1px; }
 
-  /* Calendar */
   .section-title { font-size: 13px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 0.75rem; }
-  .cal-nav-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .cal-nav-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
   .cal-month { font-size: 15px; font-weight: 600; min-width: 160px; }
-  .cal-legend { display: flex; gap: 12px; margin-left: auto; font-size: 12px; color: var(--text2); align-items: center; }
-  .ldot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  .cal-legend { display: flex; gap: 8px; margin-left: auto; font-size: 12px; color: var(--text2); align-items: center; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .ldot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
   .day-label { font-size: 11px; color: var(--text2); text-align: center; padding: 4px 0; font-weight: 500; }
-  .day-cell { min-height: 60px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 6px; cursor: pointer; transition: border-color .15s; }
+  .day-cell {
+    min-height: 56px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 5px 6px;
+    cursor: pointer;
+    transition: border-color .15s;
+    overflow: hidden;
+  }
   .day-cell:hover { border-color: var(--accent); }
   .day-cell.other { opacity: 0.3; cursor: default; }
   .day-cell.today { border-color: var(--accent); }
-  .day-num { font-size: 11px; color: var(--text2); margin-bottom: 3px; }
-  .day-entries { display: flex; flex-direction: column; gap: 2px; }
-  .edot { font-size: 10px; padding: 1px 5px; border-radius: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .edot.me { background: var(--blue-dim); color: var(--blue-text); }
-  .edot.client { background: var(--green-dim); color: var(--green-text); }
+  .day-num { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+  /* dots row — wraps, never overflows */
+  .day-dots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    overflow: hidden;
+  }
+  .day-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(0,0,0,0.3);
+  }
 
-  /* Export */
   .export-section { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
   .export-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
   .export-row span { font-size: 13px; font-weight: 500; margin-right: 4px; }
@@ -95,23 +114,54 @@
   .copy-ok { font-size: 12px; color: var(--green-text); opacity: 0; transition: opacity .3s; }
   .copy-ok.show { opacity: 1; }
 
-  /* Save/Load */
   .persist-row { display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap; align-items: center; }
   .persist-row span { font-size: 12px; color: var(--text2); }
 
   /* Modal */
   .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; align-items: center; justify-content: center; }
   .overlay.open { display: flex; }
-  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; width: 320px; max-width: 95vw; }
-  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; }
-  .modal-entries { margin-bottom: 10px; }
-  .mentry { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
-  .mentry .edot { flex: 1; padding: 4px 10px; font-size: 12px; }
-  .mentry .who-label { font-size: 12px; color: var(--text2); min-width: 44px; }
-  .mentry button { padding: 3px 8px; }
-  .add-entry-row { display: flex; gap: 6px; align-items: center; }
-  .add-entry-row select { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: var(--font); font-size: 13px; padding: 6px 8px; outline: none; }
-  .modal-footer { margin-top: 1rem; display: flex; justify-content: flex-end; }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    width: 340px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; flex-shrink: 0; }
+  .modal-entries { margin-bottom: 10px; flex-shrink: 0; }
+  .mentry { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; min-width: 0; }
+  .mentry-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.15); }
+  .mentry-name { flex: 1; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .mentry-who { font-size: 12px; color: var(--text2); flex-shrink: 0; }
+  .mentry button { padding: 3px 8px; flex-shrink: 0; }
+
+  /* add entry row — wraps properly */
+  .add-entry-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .add-entry-row select {
+    flex: 1;
+    min-width: 100px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 6px 8px;
+    outline: none;
+  }
+  .add-entry-row button { flex-shrink: 0; }
+  .modal-footer { margin-top: 1rem; display: flex; justify-content: flex-end; flex-shrink: 0; }
 
   @media (max-width: 600px) {
     .metrics { grid-template-columns: 1fr 1fr; }
@@ -129,6 +179,10 @@
 
   <div class="toolbar">
     <input type="text" id="new-task" placeholder="Название новой задачи…" onkeydown="if(event.key==='Enter')addTask()" />
+    <div class="color-pick-wrap">
+      <label>Цвет</label>
+      <input type="color" id="new-color" value="#6366f1" />
+    </div>
     <button class="btn-primary" onclick="addTask()">+ Добавить</button>
   </div>
 
@@ -136,6 +190,7 @@
     <table>
       <thead>
         <tr>
+          <th style="width:30px"></th>
           <th>Задача</th>
           <th style="width:90px;text-align:center">Часы</th>
           <th style="width:70px;text-align:center">Дни</th>
@@ -158,10 +213,7 @@
     <button onclick="changeMonth(-1)">&#8249;</button>
     <span class="cal-month" id="cal-month"></span>
     <button onclick="changeMonth(1)">&#8250;</button>
-    <div class="cal-legend">
-      <span><span class="ldot" style="background:var(--blue)"></span>Я</span>
-      <span><span class="ldot" style="background:var(--green)"></span>Клиент</span>
-    </div>
+    <div class="cal-legend" id="cal-legend"></div>
   </div>
   <div class="cal-grid" id="cal-grid"></div>
 
@@ -193,7 +245,7 @@
     <div class="modal-entries" id="modal-entries"></div>
     <div class="add-entry-row">
       <select id="e-task"></select>
-      <select id="e-who" style="width:90px">
+      <select id="e-who" style="width:100px">
         <option value="me">Я</option>
         <option value="client">Клиент</option>
       </select>
@@ -207,11 +259,12 @@
 const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const DAYS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const DEFAULT_COLORS = ['#6366f1','#3b82f6','#22c55e','#f59e0b','#ef4444','#ec4899','#14b8a6','#8b5cf6'];
 
 let tasks = [
-  { id: 1, name: 'Дизайн макета', hours: 8, ball: 'me' },
-  { id: 2, name: 'Согласование', hours: 2, ball: 'client' },
-  { id: 3, name: 'Разработка', hours: 20, ball: 'me' },
+  { id: 1, name: 'Дизайн макета', hours: 8, ball: 'me', color: '#6366f1' },
+  { id: 2, name: 'Согласование', hours: 2, ball: 'client', color: '#f59e0b' },
+  { id: 3, name: 'Разработка', hours: 20, ball: 'me', color: '#3b82f6' },
 ];
 let nextId = 4;
 let entries = {};
@@ -225,8 +278,11 @@ function init() {
 function addTask() {
   const inp = document.getElementById('new-task');
   const name = inp.value.trim(); if (!name) return;
-  tasks.push({ id: nextId++, name, hours: 0, ball: 'me' });
-  inp.value = ''; render(); renderCal();
+  const color = document.getElementById('new-color').value;
+  tasks.push({ id: nextId++, name, hours: 0, ball: 'me', color });
+  inp.value = '';
+  document.getElementById('new-color').value = DEFAULT_COLORS[tasks.length % DEFAULT_COLORS.length];
+  render(); renderCal();
 }
 
 function removeTask(id) {
@@ -237,12 +293,15 @@ function removeTask(id) {
 
 function setBall(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.ball=v; render();} }
 function setHours(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.hours=parseFloat(v)||0; renderMetrics();} }
-function setName(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.name=v; renderCal();} }
+function setName(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.name=v; renderCal(); renderLegend();} }
+function setColor(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.color=v; render(); renderCal();} }
 
 function render() {
   document.getElementById('tbody').innerHTML = tasks.map(t => {
     const days = Math.round(t.hours/8*10)/10;
     return `<tr>
+      <td><span class="task-color-dot" style="background:${t.color}" title="Изменить цвет" onclick="document.getElementById('cp-${t.id}').click()"></span>
+        <input type="color" id="cp-${t.id}" value="${t.color}" style="display:none" oninput="setColor(${t.id},this.value)" /></td>
       <td><input type="text" value="${esc(t.name)}" onblur="setName(${t.id},this.value)" /></td>
       <td style="text-align:center"><input type="number" min="0" step="0.5" value="${t.hours}" onchange="setHours(${t.id},this.value)" /></td>
       <td class="days-cell">${days}</td>
@@ -254,6 +313,7 @@ function render() {
     </tr>`;
   }).join('');
   renderMetrics();
+  renderLegend();
 }
 
 function renderMetrics() {
@@ -261,6 +321,13 @@ function renderMetrics() {
   const h = tasks.reduce((s,t)=>s+t.hours,0);
   document.getElementById('m-hours').textContent = h%1===0?h:h.toFixed(1);
   document.getElementById('m-me').textContent = tasks.filter(t=>t.ball==='me').length;
+}
+
+function renderLegend() {
+  const el = document.getElementById('cal-legend');
+  el.innerHTML = tasks.map(t =>
+    `<div class="legend-item"><span class="ldot" style="background:${t.color}"></span><span>${t.name}</span></div>`
+  ).join('');
 }
 
 function changeMonth(d) {
@@ -286,12 +353,15 @@ function renderCal() {
     const key=`${curY}-${pad(curM+1)}-${pad(c.d)}`;
     const isToday=c.cur&&today.getFullYear()===curY&&today.getMonth()===curM&&today.getDate()===c.d;
     const ents=(entries[key]||[]);
-    const dots=ents.slice(0,3).map(e=>{
+    const dots=ents.map(e=>{
       const t=tasks.find(t=>t.id===e.tid);
-      return `<div class="edot ${e.who}">${t?t.name:'?'}</div>`;
+      const color=t?t.color:'#888';
+      const label=t?`${t.name} · ${e.who==='me'?'Я':'Клиент'}`:'?';
+      return `<div class="day-dot" style="background:${color}" title="${label}"></div>`;
     }).join('');
     return `<div class="day-cell${c.cur?'':' other'}${isToday?' today':''}" ${c.cur?`onclick="openModal('${key}')"`:''}>
-      <div class="day-num">${c.d}</div><div class="day-entries">${dots}</div>
+      <div class="day-num">${c.d}</div>
+      <div class="day-dots">${dots}</div>
     </div>`;
   }).join('');
   document.getElementById('cal-grid').innerHTML = html;
@@ -312,9 +382,11 @@ function renderModalEntries() {
   if(!ents.length){el.innerHTML=`<div style="font-size:12px;color:var(--text2);margin-bottom:10px">Нет записей</div>`;return;}
   el.innerHTML=ents.map((e,i)=>{
     const t=tasks.find(t=>t.id===e.tid);
+    const color=t?t.color:'#888';
     return `<div class="mentry">
-      <span class="edot ${e.who}">${t?t.name:'?'}</span>
-      <span class="who-label">${e.who==='me'?'Я':'Клиент'}</span>
+      <div class="mentry-dot" style="background:${color}"></div>
+      <span class="mentry-name">${t?t.name:'?'}</span>
+      <span class="mentry-who">${e.who==='me'?'Я':'Клиент'}</span>
       <button class="btn-danger" onclick="removeEntry(${i})">✕</button>
     </div>`;
   }).join('');
@@ -343,13 +415,10 @@ function closeModal(e) {
 function pad(n){return String(n).padStart(2,'0');}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
-// Markdown export
 function buildTasksMd(){
   const totalH=tasks.reduce((s,t)=>s+t.hours,0);
   const totalD=Math.round(totalH/8*10)/10;
-  let md='## Задачи проекта\n\n';
-  md+='| Задача | Часы | Дни | Мяч у |\n';
-  md+='|--------|-----:|----:|-------|\n';
+  let md='## Задачи проекта\n\n| Задача | Часы | Дни | Мяч у |\n|--------|-----:|----:|-------|\n';
   tasks.forEach(t=>{
     md+=`| ${t.name} | ${t.hours} | ${Math.round(t.hours/8*10)/10} | ${t.ball==='me'?'🔵 Я':'🟢 Клиент'} |\n`;
   });
@@ -365,8 +434,7 @@ function buildCalMd(){
   let md='## Календарь ответственности\n\n';
   Object.keys(byMonth).sort().forEach(mk=>{
     const [y,m]=mk.split('-');
-    md+=`### ${MONTHS[parseInt(m)-1]} ${y}\n\n`;
-    md+='| Дата | Задача | Мяч у |\n|------|--------|-------|\n';
+    md+=`### ${MONTHS[parseInt(m)-1]} ${y}\n\n| Дата | Задача | Мяч у |\n|------|--------|-------|\n`;
     byMonth[mk].forEach(dateKey=>{
       (entries[dateKey]||[]).forEach(e=>{
         const [,,d]=dateKey.split('-');
@@ -397,7 +465,6 @@ function copyMd(){
   });
 }
 
-// Save / Load JSON
 function saveData(){
   const data={tasks,nextId,entries};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
