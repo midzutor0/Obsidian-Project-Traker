@@ -12,203 +12,182 @@
     --border: #2a2f42;
     --text: #e2e6f0;
     --text2: #8892aa;
-    --blue: #3b82f6;
+    --accent: #6366f1;
     --blue-dim: #1e3a5f;
     --blue-text: #93c5fd;
-    --green: #22c55e;
     --green-dim: #14532d;
     --green-text: #86efac;
-    --accent: #6366f1;
     --danger: #ef4444;
     --radius: 8px;
     --radius-sm: 5px;
-    --font: 'Inter', system-ui, -apple-system, sans-serif;
-    --mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --font: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+
+    /* 4 task colors */
+    --c1: #6366f1; /* индиго */
+    --c2: #3b82f6; /* синий */
+    --c3: #f59e0b; /* янтарь */
+    --c4: #ec4899; /* розовый */
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; min-height: 100vh; }
 
-  .app { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-  .app-header { margin-bottom: 2rem; }
-  .app-header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
-  .app-header p { color: var(--text2); font-size: 13px; margin-top: 4px; }
+  .app { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-size: 22px; font-weight: 600; letter-spacing: -.3px; margin-bottom: 4px; }
+  .subtitle { color: var(--text2); font-size: 13px; margin-bottom: 2rem; }
 
-  .toolbar { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
-  .toolbar input[type=text] { flex: 1; min-width: 160px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text); font-size: 13px; font-family: var(--font); outline: none; }
-  .toolbar input[type=text]:focus { border-color: var(--accent); }
-  .color-pick-wrap { display: flex; align-items: center; gap: 6px; }
-  .color-pick-wrap label { font-size: 12px; color: var(--text2); white-space: nowrap; }
-  input[type=color] { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg2); cursor: pointer; padding: 2px; }
-
+  /* ── buttons ── */
   button { cursor: pointer; font-family: var(--font); font-size: 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg2); color: var(--text); padding: 7px 14px; transition: background .15s, border-color .15s; white-space: nowrap; }
   button:hover { background: var(--bg3); border-color: var(--accent); }
   .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn-primary:hover { background: #4f46e5; border-color: #4f46e5; }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text2); padding: 4px 8px; }
+  .btn-ghost:hover { background: var(--bg3); border-color: var(--border); color: var(--text); }
   .btn-danger:hover { background: #450a0a; border-color: var(--danger); color: var(--danger); }
+  input[type=text], input[type=number], select {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 7px 10px; color: var(--text); font-size: 13px; font-family: var(--font); outline: none;
+  }
+  input[type=text]:focus, input[type=number]:focus, select:focus { border-color: var(--accent); }
 
-  .tbl-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
-  table { width: 100%; border-collapse: collapse; }
-  thead th { font-size: 11px; font-weight: 500; color: var(--text2); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
-  tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
-  tbody tr:hover { background: var(--bg2); }
-  td { padding: 8px 10px; vertical-align: middle; }
-  td input[type=text] { background: transparent; border: none; outline: none; font-size: 13px; font-weight: 500; color: var(--text); font-family: var(--font); width: 100%; }
-  td input[type=number] { width: 64px; text-align: center; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 13px; font-family: var(--font); padding: 4px 6px; outline: none; }
-  td input[type=number]:focus { border-color: var(--accent); }
+  /* ── color swatches ── */
+  .swatch-row { display: flex; gap: 6px; align-items: center; }
+  .swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform .12s, border-color .12s; flex-shrink: 0; }
+  .swatch:hover { transform: scale(1.15); }
+  .swatch.selected { border-color: #fff; transform: scale(1.15); }
+
+  /* ── section label ── */
+  .section-label { font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: .6px; margin-bottom: .75rem; }
+
+  /* ── project groups ── */
+  .projects-area { display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem; }
+
+  .project-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+
+  .project-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; cursor: pointer; user-select: none;
+    border-bottom: 1px solid transparent; transition: border-color .15s;
+  }
+  .project-header:hover { background: var(--bg3); }
+  .project-header.open { border-bottom-color: var(--border); }
+  .project-chevron { font-size: 11px; color: var(--text2); transition: transform .2s; flex-shrink: 0; }
+  .project-chevron.open { transform: rotate(90deg); }
+  .project-name-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-size: 14px; font-weight: 600; color: var(--text); font-family: var(--font);
+    cursor: text;
+  }
+  .project-meta { font-size: 12px; color: var(--text2); flex-shrink: 0; }
+
+  .project-body { padding: 0 14px 12px; display: none; }
+  .project-body.open { display: block; }
+
+  /* tasks table inside project */
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  thead th { font-size: 11px; font-weight: 500; color: var(--text2); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--bg3); }
+  td { padding: 7px 8px; vertical-align: middle; }
+  td input[type=text] { background: transparent; border: none; padding: 0; font-size: 13px; font-weight: 500; color: var(--text); width: 100%; }
+  td input[type=text]:focus { border: none; outline: none; }
+  td input[type=number] { width: 60px; text-align: center; padding: 3px 6px; font-size: 13px; }
   .days-cell { color: var(--text2); font-size: 13px; text-align: center; }
-  .task-color-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; flex-shrink: 0; cursor: pointer; border: 2px solid rgba(255,255,255,0.15); }
+  .dot-cell { width: 28px; }
+  .task-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 2px solid rgba(255,255,255,.15); flex-shrink: 0; }
 
   .ball-toggle { display: flex; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); width: fit-content; }
-  .ball-btn { padding: 4px 12px; font-size: 12px; border: none; background: transparent; cursor: pointer; color: var(--text2); font-family: var(--font); transition: background .15s; border-radius: 0; }
+  .ball-btn { padding: 3px 10px; font-size: 12px; border: none; background: transparent; cursor: pointer; color: var(--text2); font-family: var(--font); transition: background .15s; border-radius: 0; }
   .ball-btn.me.active { background: var(--blue-dim); color: var(--blue-text); }
   .ball-btn.client.active { background: var(--green-dim); color: var(--green-text); }
 
-  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2rem; }
+  .add-task-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+  .add-task-row input[type=text] { flex: 1; min-width: 140px; }
+
+  /* ── metrics ── */
+  .metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 2rem; }
   .metric { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
   .metric-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
   .metric-val { font-size: 28px; font-weight: 600; letter-spacing: -1px; }
 
-  .section-title { font-size: 13px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 0.75rem; }
+  /* ── add project bar ── */
+  .add-project-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
+  .add-project-bar input { flex: 1; min-width: 180px; }
+
+  /* ── calendar ── */
   .cal-nav-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
   .cal-month { font-size: 15px; font-weight: 600; min-width: 160px; }
-  .cal-legend { display: flex; gap: 8px; margin-left: auto; font-size: 12px; color: var(--text2); align-items: center; flex-wrap: wrap; }
+  .cal-legend { display: flex; gap: 10px; margin-left: auto; font-size: 12px; color: var(--text2); align-items: center; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 5px; }
-  .ldot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .ldot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
-  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
   .day-label { font-size: 11px; color: var(--text2); text-align: center; padding: 4px 0; font-weight: 500; }
-  .day-cell {
-    min-height: 56px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 5px 6px;
-    cursor: pointer;
-    transition: border-color .15s;
-    overflow: hidden;
-  }
+  .day-cell { min-height: 56px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 6px; cursor: pointer; transition: border-color .15s; overflow: hidden; }
   .day-cell:hover { border-color: var(--accent); }
-  .day-cell.other { opacity: 0.3; cursor: default; }
+  .day-cell.other { opacity: .3; cursor: default; }
   .day-cell.today { border-color: var(--accent); }
   .day-num { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
-  /* dots row — wraps, never overflows */
-  .day-dots {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    overflow: hidden;
-  }
-  .day-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    border: 1.5px solid rgba(0,0,0,0.3);
-  }
+  .day-dots { display: flex; flex-wrap: wrap; gap: 3px; overflow: hidden; }
+  .day-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid rgba(0,0,0,.3); }
 
+  /* ── export ── */
   .export-section { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
   .export-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-  .export-row span { font-size: 13px; font-weight: 500; margin-right: 4px; }
+  .export-row span { font-size: 13px; font-weight: 500; }
   .md-block { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; font-family: var(--mono); font-size: 12px; line-height: 1.75; white-space: pre; overflow-x: auto; max-height: 320px; overflow-y: auto; color: #a5b4fc; display: none; }
   .copy-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; justify-content: flex-end; }
   .copy-ok { font-size: 12px; color: var(--green-text); opacity: 0; transition: opacity .3s; }
   .copy-ok.show { opacity: 1; }
-
   .persist-row { display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap; align-items: center; }
   .persist-row span { font-size: 12px; color: var(--text2); }
 
-  /* Modal */
+  /* ── modal ── */
   .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; align-items: center; justify-content: center; }
   .overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    width: 340px;
-    max-width: 95vw;
-    max-height: 90vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; flex-shrink: 0; }
-  .modal-entries { margin-bottom: 10px; flex-shrink: 0; }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; width: 340px; max-width: 95vw; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 0; }
+  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; }
+  .modal-entries { margin-bottom: 10px; }
   .mentry { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; min-width: 0; }
-  .mentry-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.15); }
+  .mentry-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,.15); }
   .mentry-name { flex: 1; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .mentry-proj { font-size: 11px; color: var(--text2); flex-shrink: 0; }
   .mentry-who { font-size: 12px; color: var(--text2); flex-shrink: 0; }
-  .mentry button { padding: 3px 8px; flex-shrink: 0; }
+  .add-entry-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .add-entry-row select { flex: 1; min-width: 100px; }
+  .modal-footer { margin-top: 1rem; display: flex; justify-content: flex-end; }
 
-  /* add entry row — wraps properly */
-  .add-entry-row {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .add-entry-row select {
-    flex: 1;
-    min-width: 100px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 13px;
-    padding: 6px 8px;
-    outline: none;
-  }
-  .add-entry-row button { flex-shrink: 0; }
-  .modal-footer { margin-top: 1rem; display: flex; justify-content: flex-end; flex-shrink: 0; }
-
-  @media (max-width: 600px) {
-    .metrics { grid-template-columns: 1fr 1fr; }
-    .metric:last-child { grid-column: 1 / -1; }
-    .cal-legend { display: none; }
+  @media(max-width:600px){
+    .metrics{grid-template-columns:1fr 1fr;}
+    .metric:last-child{grid-column:1/-1;}
+    .cal-legend{display:none;}
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="app-header">
-    <h1>Трекер задач проекта</h1>
-    <p>Задачи · Тайминги · Ответственность</p>
+  <h1>Трекер задач проекта</h1>
+  <p class="subtitle">Проекты · Задачи · Тайминги · Ответственность</p>
+
+  <!-- Add project -->
+  <div class="section-label">Проекты</div>
+  <div class="add-project-bar">
+    <input type="text" id="new-proj-name" placeholder="Название проекта…" onkeydown="if(event.key==='Enter')addProject()" />
+    <button class="btn-primary" onclick="addProject()">+ Проект</button>
   </div>
 
-  <div class="toolbar">
-    <input type="text" id="new-task" placeholder="Название новой задачи…" onkeydown="if(event.key==='Enter')addTask()" />
-    <div class="color-pick-wrap">
-      <label>Цвет</label>
-      <input type="color" id="new-color" value="#6366f1" />
-    </div>
-    <button class="btn-primary" onclick="addTask()">+ Добавить</button>
-  </div>
+  <div class="projects-area" id="projects-area"></div>
 
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th style="width:30px"></th>
-          <th>Задача</th>
-          <th style="width:90px;text-align:center">Часы</th>
-          <th style="width:70px;text-align:center">Дни</th>
-          <th style="width:140px">Мяч у</th>
-          <th style="width:40px"></th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
-
+  <!-- Metrics -->
   <div class="metrics">
     <div class="metric"><div class="metric-label">Всего задач</div><div class="metric-val" id="m-tasks">0</div></div>
     <div class="metric"><div class="metric-label">Часов</div><div class="metric-val" id="m-hours">0</div></div>
     <div class="metric"><div class="metric-label">Мяч у меня</div><div class="metric-val" id="m-me">0</div></div>
   </div>
 
-  <div class="section-title">Календарь ответственности</div>
+  <!-- Calendar -->
+  <div class="section-label">Календарь ответственности</div>
   <div class="cal-nav-row">
     <button onclick="changeMonth(-1)">&#8249;</button>
     <span class="cal-month" id="cal-month"></span>
@@ -217,6 +196,7 @@
   </div>
   <div class="cal-grid" id="cal-grid"></div>
 
+  <!-- Export -->
   <div class="export-section">
     <div class="export-row">
       <span>📄 Экспорт в Markdown</span>
@@ -232,16 +212,19 @@
   </div>
 
   <div class="persist-row">
-    <span>💾 Данные:</span>
-    <button onclick="saveData()">Сохранить в файл</button>
-    <label style="cursor:pointer"><button onclick="document.getElementById('load-file').click()">Загрузить из файла</button></label>
-    <input type="file" id="load-file" accept=".json" style="display:none" onchange="loadData(event)" />
+    <span id="file-status">💾 Файл не выбран</span>
+    <button id="btn-link" onclick="linkFile()">Привязать файл…</button>
+    <button onclick="forceSave()" id="btn-save" style="display:none">Сохранить сейчас</button>
+    <button onclick="unlinkFile()" id="btn-unlink" style="display:none">Отвязать</button>
+    <input type="file" id="load-file-legacy" accept=".json" style="display:none" onchange="loadDataLegacy(event)" />
   </div>
+  <div style="margin-top:6px;font-size:11px;color:var(--text2)" id="fsapi-hint"></div>
 </div>
 
+<!-- Calendar modal -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
   <div class="modal">
-    <h3 id="modal-title">Записи</h3>
+    <h3 id="modal-title"></h3>
     <div class="modal-entries" id="modal-entries"></div>
     <div class="add-entry-row">
       <select id="e-task"></select>
@@ -256,80 +239,244 @@
 </div>
 
 <script>
+const TASK_COLORS = ['#6366f1','#3b82f6','#f59e0b','#ec4899'];
 const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const DAYS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-const DEFAULT_COLORS = ['#6366f1','#3b82f6','#22c55e','#f59e0b','#ef4444','#ec4899','#14b8a6','#8b5cf6'];
 
-let tasks = [
-  { id: 1, name: 'Дизайн макета', hours: 8, ball: 'me', color: '#6366f1' },
-  { id: 2, name: 'Согласование', hours: 2, ball: 'client', color: '#f59e0b' },
-  { id: 3, name: 'Разработка', hours: 20, ball: 'me', color: '#3b82f6' },
+let projects = [
+  {
+    id: 1, name: 'Веб-сайт', open: true,
+    tasks: [
+      { id: 1, name: 'Дизайн макета', hours: 8, ball: 'me', color: '#6366f1' },
+      { id: 2, name: 'Согласование', hours: 2, ball: 'client', color: '#f59e0b' },
+    ]
+  },
+  {
+    id: 2, name: 'Мобильное приложение', open: false,
+    tasks: [
+      { id: 3, name: 'Разработка', hours: 20, ball: 'me', color: '#3b82f6' },
+    ]
+  }
 ];
-let nextId = 4;
+let nextPid = 3, nextTid = 4;
 let entries = {};
 let curY, curM, selDate;
 
+// ── localStorage ──
+const LS_KEY = 'project-tracker-v1';
+
+function lsSave() {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({ projects, nextPid, nextTid, entries }));
+  } catch(e) {}
+}
+
+function lsLoad() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const d = JSON.parse(raw);
+    projects = d.projects || []; nextPid = d.nextPid || 100; nextTid = d.nextTid || 100; entries = d.entries || {};
+    return true;
+  } catch(e) { return false; }
+}
+
+// ── init ──
 function init() {
   const n = new Date(); curY = n.getFullYear(); curM = n.getMonth();
-  render(); renderCal();
+  lsLoad();
+  renderProjects(); renderMetrics(); renderCal();
+  updateFileUI();
 }
 
-function addTask() {
-  const inp = document.getElementById('new-task');
+// ── projects ──
+function addProject() {
+  const inp = document.getElementById('new-proj-name');
   const name = inp.value.trim(); if (!name) return;
-  const color = document.getElementById('new-color').value;
-  tasks.push({ id: nextId++, name, hours: 0, ball: 'me', color });
+  projects.push({ id: nextPid++, name, open: true, tasks: [] });
   inp.value = '';
-  document.getElementById('new-color').value = DEFAULT_COLORS[tasks.length % DEFAULT_COLORS.length];
-  render(); renderCal();
+  lsSave(); fsSave(); renderProjects(); renderMetrics();
 }
 
-function removeTask(id) {
-  tasks = tasks.filter(t => t.id !== id);
-  for (const k in entries) { entries[k] = entries[k].filter(e => e.tid !== id); if (!entries[k].length) delete entries[k]; }
-  render(); renderCal();
+function removeProject(pid) {
+  const proj = projects.find(p => p.id === pid);
+  if (!proj) return;
+  const tids = proj.tasks.map(t => t.id);
+  for (const k in entries) {
+    entries[k] = entries[k].filter(e => !tids.includes(e.tid));
+    if (!entries[k].length) delete entries[k];
+  }
+  projects = projects.filter(p => p.id !== pid);
+  lsSave(); fsSave(); renderProjects(); renderMetrics(); renderCal();
 }
 
-function setBall(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.ball=v; render();} }
-function setHours(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.hours=parseFloat(v)||0; renderMetrics();} }
-function setName(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.name=v; renderCal(); renderLegend();} }
-function setColor(id, v) { const t = tasks.find(t=>t.id===id); if(t){t.color=v; render(); renderCal();} }
+function toggleProject(pid) {
+  const p = projects.find(p => p.id === pid); if (!p) return;
+  p.open = !p.open; renderProjects();
+}
 
-function render() {
-  document.getElementById('tbody').innerHTML = tasks.map(t => {
-    const days = Math.round(t.hours/8*10)/10;
-    return `<tr>
-      <td><span class="task-color-dot" style="background:${t.color}" title="Изменить цвет" onclick="document.getElementById('cp-${t.id}').click()"></span>
-        <input type="color" id="cp-${t.id}" value="${t.color}" style="display:none" oninput="setColor(${t.id},this.value)" /></td>
-      <td><input type="text" value="${esc(t.name)}" onblur="setName(${t.id},this.value)" /></td>
-      <td style="text-align:center"><input type="number" min="0" step="0.5" value="${t.hours}" onchange="setHours(${t.id},this.value)" /></td>
-      <td class="days-cell">${days}</td>
-      <td><div class="ball-toggle">
-        <button class="ball-btn me ${t.ball==='me'?'active':''}" onclick="setBall(${t.id},'me')">Я</button>
-        <button class="ball-btn client ${t.ball==='client'?'active':''}" onclick="setBall(${t.id},'client')">Клиент</button>
-      </div></td>
-      <td><button class="btn-danger" onclick="removeTask(${t.id})" title="Удалить">✕</button></td>
-    </tr>`;
+function setProjName(pid, v) {
+  const p = projects.find(p => p.id === pid); if (p) { p.name = v; lsSave(); fsSave(); }
+}
+
+// ── tasks ──
+function addTask(pid) {
+  const inp = document.getElementById(`nt-${pid}`);
+  const name = inp.value.trim(); if (!name) return;
+  const colorEl = document.querySelector(`#proj-${pid} .swatch.selected`);
+  const color = colorEl ? colorEl.dataset.color : TASK_COLORS[0];
+  const p = projects.find(p => p.id === pid); if (!p) return;
+  p.tasks.push({ id: nextTid++, name, hours: 0, ball: 'me', color });
+  inp.value = '';
+  lsSave(); fsSave(); renderProjects(); renderMetrics(); renderCal();
+}
+
+function removeTask(pid, tid) {
+  const p = projects.find(p => p.id === pid); if (!p) return;
+  p.tasks = p.tasks.filter(t => t.id !== tid);
+  for (const k in entries) {
+    entries[k] = entries[k].filter(e => e.tid !== tid);
+    if (!entries[k].length) delete entries[k];
+  }
+  lsSave(); fsSave(); renderProjects(); renderMetrics(); renderCal();
+}
+
+function setTaskBall(pid, tid, v) {
+  const t = getTask(tid); if (t) { t.ball = v; lsSave(); fsSave(); renderProjects(); renderMetrics(); }
+}
+function setTaskHours(tid, v) {
+  const t = getTask(tid); if (t) { t.hours = parseFloat(v) || 0; lsSave(); fsSave(); renderMetrics(); }
+}
+function setTaskName(tid, v) {
+  const t = getTask(tid); if (t) { t.name = v; lsSave(); fsSave(); renderCal(); }
+}
+function setTaskColor(pid, tid, color) {
+  const t = getTask(tid); if (t) { t.color = color; lsSave(); fsSave(); renderProjects(); renderCal(); }
+}
+
+function getTask(tid) {
+  for (const p of projects) { const t = p.tasks.find(t => t.id === tid); if (t) return t; }
+  return null;
+}
+
+// ── render projects ──
+function renderProjects() {
+  const area = document.getElementById('projects-area');
+  area.innerHTML = projects.map(p => {
+    const totalH = p.tasks.reduce((s,t)=>s+t.hours,0);
+    const totalD = Math.round(totalH/8*10)/10;
+    const tasksHtml = p.tasks.length ? `
+      <table>
+        <thead><tr>
+          <th class="dot-cell"></th>
+          <th>Задача</th>
+          <th style="width:80px;text-align:center">Часы</th>
+          <th style="width:60px;text-align:center">Дни</th>
+          <th style="width:130px">Мяч у</th>
+          <th style="width:36px"></th>
+        </tr></thead>
+        <tbody>${p.tasks.map(t => taskRow(p.id, t)).join('')}</tbody>
+      </table>` : `<div style="font-size:12px;color:var(--text2);padding:10px 0">Нет задач — добавьте ниже</div>`;
+
+    return `<div class="project-card" id="proj-${p.id}">
+      <div class="project-header ${p.open?'open':''}" onclick="toggleProject(${p.id})">
+        <span class="project-chevron ${p.open?'open':''}">▶</span>
+        <input class="project-name-input" value="${esc(p.name)}"
+          onblur="setProjName(${p.id},this.value)"
+          onclick="event.stopPropagation()"
+          onkeydown="if(event.key==='Enter')this.blur()" />
+        <span class="project-meta">${p.tasks.length} зад. · ${totalH}ч / ${totalD}д</span>
+        <button class="btn-ghost btn-danger" onclick="event.stopPropagation();removeProject(${p.id})" title="Удалить проект">✕</button>
+      </div>
+      <div class="project-body ${p.open?'open':''}">
+        ${tasksHtml}
+        <div class="add-task-row">
+          <input type="text" id="nt-${p.id}" placeholder="Новая задача…"
+            onkeydown="if(event.key==='Enter')addTask(${p.id})" />
+          <div class="swatch-row" id="sw-${p.id}">
+            ${TASK_COLORS.map((c,i) => `<div class="swatch ${i===0?'selected':''}" data-color="${c}" style="background:${c}"
+              onclick="selectSwatch(${p.id},this)"></div>`).join('')}
+          </div>
+          <button onclick="addTask(${p.id})">+ Задача</button>
+        </div>
+      </div>
+    </div>`;
   }).join('');
-  renderMetrics();
   renderLegend();
 }
 
-function renderMetrics() {
-  document.getElementById('m-tasks').textContent = tasks.length;
-  const h = tasks.reduce((s,t)=>s+t.hours,0);
-  document.getElementById('m-hours').textContent = h%1===0?h:h.toFixed(1);
-  document.getElementById('m-me').textContent = tasks.filter(t=>t.ball==='me').length;
+function taskRow(pid, t) {
+  const days = Math.round(t.hours/8*10)/10;
+  const swatches = TASK_COLORS.map(c =>
+    `<div class="swatch ${c===t.color?'selected':''}" data-color="${c}" style="background:${c}"
+      onclick="setTaskColor(${pid},${t.id},'${c}')"></div>`
+  ).join('');
+  return `<tr>
+    <td class="dot-cell">
+      <div style="position:relative;display:inline-block">
+        <div class="task-dot" style="background:${t.color};cursor:pointer"
+          onclick="document.getElementById('tsw-${t.id}').classList.toggle('open')" title="Цвет"></div>
+        <div id="tsw-${t.id}" style="display:none;position:absolute;top:18px;left:0;z-index:10;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px;gap:5px;flex-direction:row;"
+          class="swatch-popup">
+          <div class="swatch-row">${swatches}</div>
+        </div>
+      </div>
+    </td>
+    <td><input type="text" value="${esc(t.name)}" onblur="setTaskName(${t.id},this.value)" /></td>
+    <td style="text-align:center"><input type="number" min="0" step="0.5" value="${t.hours}" onchange="setTaskHours(${t.id},this.value)" /></td>
+    <td class="days-cell">${days}</td>
+    <td><div class="ball-toggle">
+      <button class="ball-btn me ${t.ball==='me'?'active':''}" onclick="setTaskBall(${pid},${t.id},'me')">Я</button>
+      <button class="ball-btn client ${t.ball==='client'?'active':''}" onclick="setTaskBall(${pid},${t.id},'client')">Клиент</button>
+    </div></td>
+    <td><button class="btn-ghost btn-danger" onclick="removeTask(${pid},${t.id})" title="Удалить">✕</button></td>
+  </tr>`;
 }
 
+// close color popup on outside click
+document.addEventListener('click', e => {
+  document.querySelectorAll('.swatch-popup.open').forEach(el => {
+    if (!el.contains(e.target) && !e.target.classList.contains('task-dot')) {
+      el.classList.remove('open'); el.style.display='none';
+    }
+  });
+});
+// patch swatch popup toggle
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('task-dot')) {
+    const popup = e.target.parentElement.querySelector('.swatch-popup');
+    if (!popup) return;
+    const isOpen = popup.style.display === 'flex';
+    document.querySelectorAll('.swatch-popup').forEach(p => { p.style.display='none'; p.classList.remove('open'); });
+    if (!isOpen) { popup.style.display='flex'; popup.classList.add('open'); }
+  }
+});
+
+function selectSwatch(pid, el) {
+  const row = document.getElementById(`sw-${pid}`);
+  row.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── metrics ──
+function renderMetrics() {
+  const allTasks = projects.flatMap(p => p.tasks);
+  document.getElementById('m-tasks').textContent = allTasks.length;
+  const h = allTasks.reduce((s,t)=>s+t.hours,0);
+  document.getElementById('m-hours').textContent = h%1===0?h:h.toFixed(1);
+  document.getElementById('m-me').textContent = allTasks.filter(t=>t.ball==='me').length;
+}
+
+// ── legend ──
 function renderLegend() {
-  const el = document.getElementById('cal-legend');
-  el.innerHTML = tasks.map(t =>
+  const allTasks = projects.flatMap(p => p.tasks);
+  document.getElementById('cal-legend').innerHTML = allTasks.map(t =>
     `<div class="legend-item"><span class="ldot" style="background:${t.color}"></span><span>${t.name}</span></div>`
   ).join('');
 }
 
+// ── calendar ──
 function changeMonth(d) {
   curM+=d; if(curM>11){curM=0;curY++;} if(curM<0){curM=11;curY--;}
   renderCal();
@@ -354,25 +501,28 @@ function renderCal() {
     const isToday=c.cur&&today.getFullYear()===curY&&today.getMonth()===curM&&today.getDate()===c.d;
     const ents=(entries[key]||[]);
     const dots=ents.map(e=>{
-      const t=tasks.find(t=>t.id===e.tid);
+      const t=getTask(e.tid);
       const color=t?t.color:'#888';
-      const label=t?`${t.name} · ${e.who==='me'?'Я':'Клиент'}`:'?';
-      return `<div class="day-dot" style="background:${color}" title="${label}"></div>`;
+      const lbl=t?`${t.name} · ${e.who==='me'?'Я':'Клиент'}`:'?';
+      return `<div class="day-dot" style="background:${color}" title="${lbl}"></div>`;
     }).join('');
     return `<div class="day-cell${c.cur?'':' other'}${isToday?' today':''}" ${c.cur?`onclick="openModal('${key}')"`:''}>
-      <div class="day-num">${c.d}</div>
-      <div class="day-dots">${dots}</div>
+      <div class="day-num">${c.d}</div><div class="day-dots">${dots}</div>
     </div>`;
   }).join('');
   document.getElementById('cal-grid').innerHTML = html;
 }
 
+// ── modal ──
 function openModal(key) {
   selDate=key;
   const [y,m,d]=key.split('-');
   document.getElementById('modal-title').textContent=`${parseInt(d)} ${MONTHS_GEN[parseInt(m)-1]} ${y}`;
   renderModalEntries();
-  document.getElementById('e-task').innerHTML=tasks.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  const allTasks = projects.flatMap(p => p.tasks.map(t=>({...t, projName:p.name})));
+  document.getElementById('e-task').innerHTML = allTasks.map(t =>
+    `<option value="${t.id}">[${t.projName}] ${t.name}</option>`
+  ).join('');
   document.getElementById('overlay').classList.add('open');
 }
 
@@ -381,13 +531,15 @@ function renderModalEntries() {
   const el=document.getElementById('modal-entries');
   if(!ents.length){el.innerHTML=`<div style="font-size:12px;color:var(--text2);margin-bottom:10px">Нет записей</div>`;return;}
   el.innerHTML=ents.map((e,i)=>{
-    const t=tasks.find(t=>t.id===e.tid);
+    const t=getTask(e.tid);
     const color=t?t.color:'#888';
+    const proj=projects.find(p=>p.tasks.some(tt=>tt.id===e.tid));
     return `<div class="mentry">
       <div class="mentry-dot" style="background:${color}"></div>
       <span class="mentry-name">${t?t.name:'?'}</span>
+      <span class="mentry-proj">${proj?proj.name:''}</span>
       <span class="mentry-who">${e.who==='me'?'Я':'Клиент'}</span>
-      <button class="btn-danger" onclick="removeEntry(${i})">✕</button>
+      <button class="btn-ghost btn-danger" onclick="removeEntry(${i})">✕</button>
     </div>`;
   }).join('');
 }
@@ -398,13 +550,13 @@ function addEntry() {
   if(!tid) return;
   if(!entries[selDate]) entries[selDate]=[];
   entries[selDate].push({tid,who});
-  renderModalEntries(); renderCal();
+  lsSave(); fsSave(); renderModalEntries(); renderCal();
 }
 
 function removeEntry(i) {
   entries[selDate].splice(i,1);
   if(!entries[selDate].length) delete entries[selDate];
-  renderModalEntries(); renderCal();
+  lsSave(); fsSave(); renderModalEntries(); renderCal();
 }
 
 function closeModal(e) {
@@ -412,17 +564,21 @@ function closeModal(e) {
   document.getElementById('overlay').classList.remove('open');
 }
 
+// ── utils ──
 function pad(n){return String(n).padStart(2,'0');}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
 
+// ── markdown export ──
 function buildTasksMd(){
-  const totalH=tasks.reduce((s,t)=>s+t.hours,0);
-  const totalD=Math.round(totalH/8*10)/10;
-  let md='## Задачи проекта\n\n| Задача | Часы | Дни | Мяч у |\n|--------|-----:|----:|-------|\n';
-  tasks.forEach(t=>{
-    md+=`| ${t.name} | ${t.hours} | ${Math.round(t.hours/8*10)/10} | ${t.ball==='me'?'🔵 Я':'🟢 Клиент'} |\n`;
+  let md='## Задачи по проектам\n\n';
+  projects.forEach(p=>{
+    md+=`### ${p.name}\n\n| Задача | Часы | Дни | Мяч у |\n|--------|-----:|----:|-------|\n`;
+    p.tasks.forEach(t=>{
+      md+=`| ${t.name} | ${t.hours} | ${Math.round(t.hours/8*10)/10} | ${t.ball==='me'?'🔵 Я':'🟢 Клиент'} |\n`;
+    });
+    const th=p.tasks.reduce((s,t)=>s+t.hours,0);
+    md+=`| **Итого** | **${th}** | **${Math.round(th/8*10)/10}** | |\n\n`;
   });
-  md+=`| **Итого** | **${totalH}** | **${totalD}** | |\n`;
   return md;
 }
 
@@ -434,12 +590,13 @@ function buildCalMd(){
   let md='## Календарь ответственности\n\n';
   Object.keys(byMonth).sort().forEach(mk=>{
     const [y,m]=mk.split('-');
-    md+=`### ${MONTHS[parseInt(m)-1]} ${y}\n\n| Дата | Задача | Мяч у |\n|------|--------|-------|\n`;
+    md+=`### ${MONTHS[parseInt(m)-1]} ${y}\n\n| Дата | Проект | Задача | Мяч у |\n|------|--------|--------|-------|\n`;
     byMonth[mk].forEach(dateKey=>{
       (entries[dateKey]||[]).forEach(e=>{
         const [,,d]=dateKey.split('-');
-        const t=tasks.find(t=>t.id===e.tid);
-        md+=`| ${parseInt(d)} ${MONTHS_GEN[parseInt(m)-1]} | ${t?t.name:'?'} | ${e.who==='me'?'🔵 Я':'🟢 Клиент'} |\n`;
+        const t=getTask(e.tid);
+        const proj=projects.find(p=>p.tasks.some(tt=>tt.id===e.tid));
+        md+=`| ${parseInt(d)} ${MONTHS_GEN[parseInt(m)-1]} | ${proj?proj.name:'?'} | ${t?t.name:'?'} | ${e.who==='me'?'🔵 Я':'🟢 Клиент'} |\n`;
       });
     });
     md+='\n';
@@ -465,25 +622,111 @@ function copyMd(){
   });
 }
 
-function saveData(){
-  const data={tasks,nextId,entries};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='project-tracker.json'; a.click();
+// ── File System Access API ──
+let fileHandle = null;
+const FS_HANDLE_KEY = 'project-tracker-fsh-v1';
+const FSAPI = ('showOpenFilePicker' in window);
+
+async function linkFile() {
+  if (!FSAPI) {
+    // fallback: старый input
+    document.getElementById('load-file-legacy').click();
+    document.getElementById('fsapi-hint').textContent =
+      'Ваш браузер не поддерживает автосохранение в файл. Используйте кнопку ниже для ручного экспорта.';
+    return;
+  }
+  try {
+    // Try to open existing or create new
+    const [handle] = await window.showOpenFilePicker({
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+      multiple: false
+    }).catch(async () => {
+      // User might want to create a new file
+      return [await window.showSaveFilePicker({
+        suggestedName: 'project-tracker.json',
+        types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+      })];
+    });
+    fileHandle = handle;
+    // Read existing data if file has content
+    const file = await handle.getFile();
+    const text = await file.text();
+    if (text.trim()) {
+      try {
+        const d = JSON.parse(text);
+        projects = d.projects || []; nextPid = d.nextPid || 100; nextTid = d.nextTid || 100; entries = d.entries || {};
+        lsSave(); fsSave(); renderProjects(); renderMetrics(); renderCal();
+      } catch(e) {}
+    }
+    await fsSave();
+    updateFileUI();
+  } catch(e) {
+    if (e.name !== 'AbortError') console.error(e);
+  }
 }
 
-function loadData(ev){
-  const file=ev.target.files[0]; if(!file) return;
-  const r=new FileReader();
-  r.onload=e=>{
-    try{
-      const d=JSON.parse(e.target.result);
-      tasks=d.tasks||[]; nextId=d.nextId||100; entries=d.entries||{};
-      render(); renderCal();
-    }catch{ alert('Ошибка чтения файла'); }
+async function fsSave() {
+  if (!fileHandle) return;
+  try {
+    const writable = await fileHandle.createWritable();
+    await writable.write(JSON.stringify({ projects, nextPid, nextTid, entries }, null, 2));
+    await writable.close();
+    flashStatus();
+  } catch(e) {
+    console.error('fsSave error', e);
+    // permission lost — ask again
+    fileHandle = null; updateFileUI();
+  }
+}
+
+async function forceSave() {
+  if (fileHandle) { await fsSave(); }
+  else { legacyDownload(); }
+}
+
+function unlinkFile() {
+  fileHandle = null; updateFileUI();
+}
+
+function updateFileUI() {
+  const linked = !!fileHandle;
+  document.getElementById('file-status').textContent = linked
+    ? `💾 ${fileHandle.name}`
+    : '💾 Файл не выбран';
+  document.getElementById('btn-link').textContent = linked ? 'Сменить файл…' : 'Привязать файл…';
+  document.getElementById('btn-save').style.display = 'inline-block';
+  document.getElementById('btn-unlink').style.display = linked ? 'inline-block' : 'none';
+  document.getElementById('fsapi-hint').textContent = linked
+    ? 'Данные автоматически сохраняются в файл при каждом изменении.'
+    : FSAPI ? 'Выберите существующий JSON-файл или создайте новый.' : '';
+}
+
+let flashTimer;
+function flashStatus() {
+  const el = document.getElementById('file-status');
+  el.style.color = 'var(--green-text)';
+  clearTimeout(flashTimer);
+  flashTimer = setTimeout(() => { el.style.color = ''; }, 1000);
+}
+
+// legacy fallback download
+function legacyDownload() {
+  const blob = new Blob([JSON.stringify({ projects, nextPid, nextTid, entries }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'project-tracker.json'; a.click();
+}
+
+function loadDataLegacy(ev) {
+  const file = ev.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      projects = d.projects || []; nextPid = d.nextPid || 100; nextTid = d.nextTid || 100; entries = d.entries || {};
+      lsSave(); fsSave(); renderProjects(); renderMetrics(); renderCal();
+    } catch { alert('Ошибка чтения файла'); }
   };
-  r.readAsText(file);
-  ev.target.value='';
+  r.readAsText(file); ev.target.value = '';
 }
 
 init();
